@@ -10,7 +10,7 @@
 
 .NOTES
     Release Date: 2021-04-30T11:48
-    Last Updated: 2021-05-12T12:19
+    Last Updated: 2021-05-12T12:27
    
     Author: Luke Nichols
     Github link: https://github.com/jlukenichols/WakeOnLANFromCSV
@@ -85,10 +85,10 @@ $UnwakeableCount = 0
     #Loop through the system's network interfaces
     :loopThroughSystemIPAddresses Foreach ($NetIPAddress in (Get-NetIPAddress | Where-Object {($_.AddressFamily -eq "IPv4") -and ($_.InterfaceAlias -notlike "*Loopback*")})) {
         $SubnetMask = CIDRToNetMask $NetIPAddress.PrefixLength
-        $LogMessage = "Is $($line.IPAddress) in the same subnet as $($NetIPAddress.IPAddress)? Subnet: $SubnetMask"
+        $LogMessage = "Is $($line.'Computer IP Address') in the same subnet as $($NetIPAddress.IPAddress)? Subnet: $SubnetMask"
         Write-Log $LogMessage
         #Determine if the IP address of the current line in the CSV file is in the same subnet as the IP address of the current network interface
-        if (Compare-Subnets $line.IPAddress $NetIPAddress.IPAddress $SubnetMask) {
+        if (Compare-Subnets $($line."Computer IP Address") $NetIPAddress.IPAddress $SubnetMask) {
             #The IPs are in the same subnet, 
             $LogMessage = "Yes"
             Write-Log $LogMessage
@@ -99,9 +99,9 @@ $UnwakeableCount = 0
             $LogMessage = "`$BroadcastAddress = $BroadcastAddress"
             Write-Log $LogMessage
 
-            $LogMessage = "Sending WoL packet to $($line.ComputerName) with IP $($line.IPAddress) and MAC $($line.MACAddress)"
+            $LogMessage = "Sending WoL packet to $($line.'Computer Name') with IP $($line.'Computer IP Address') and MAC $($line.'Computer MAC Address')"
             Write-Log $LogMessage
-            Invoke-WakeOnLan -Verbose -MacAddress $line.MACAddress -BroadcastAddress $BroadcastAddress
+            Invoke-WakeOnLan -Verbose -MacAddress $($line."Computer MAC Address") -BroadcastAddress $BroadcastAddress
             
             #Increment the counter
             $PacketsSent += 1
@@ -114,7 +114,7 @@ $UnwakeableCount = 0
         }
     }
     #If the script reaches this point then there is no network interface capable of waking this computer.
-    $LogMessage = "ERROR: There is no network interface on this system residing on the same subnet as IP $($line.IPAddress). Cannot Wake computer $($line.ComputerName)."
+    $LogMessage = "ERROR: There is no network interface on this system residing on the same subnet as IP $($line.'Computer IP Address'). Cannot Wake computer $($line.'Computer Name')."
     Write-Log $LogMessage
 
     $UnwakeableCount += 1
