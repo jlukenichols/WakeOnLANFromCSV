@@ -7,8 +7,7 @@ function Invoke-WakeOnLan {
         [ValidatePattern('^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$')]
         [string[]]
         $MacAddress,
-        [Parameter]
-        [ipaddress]$BroadcastAddress = 255.255.255.255
+        [IPAddress]$BroadcastAddress
     )
  
     begin {
@@ -53,15 +52,14 @@ function Invoke-WakeOnLan {
         
                 # send the magic packet to the broadcast address:
                 $null = $UDPclient.Send($packet, $packet.Length)
-            Write-Verbose "sent magic packet to $currentMacAddress..."
-            }
-            catch {
+                Write-Verbose "sent magic packet to $currentMacAddress..."
+            } catch {
                 Write-Warning "Unable to send ${mac}: $_"
             }
         }
     }
     end {
-        # release the UDF client and free its memory:
+        # release the UDP client and free its memory:
         $UDPclient.Close()
         $UDPclient.Dispose()
     }

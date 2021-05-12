@@ -2,11 +2,11 @@
 # Modify the variables in CustomSettings.ps1 as needed.
 
 #Set variables for write-log function
-$LoggingMode = $true
-$VerboseLogging = $true
+$LoggingMode = $true #Set to $false to disable all logging
+$VerboseLogging = $true #Set to $true if you want all log output to also be displayed in the console
 
 #Define the root path of the running script
-$myPSScriptRoot = "C:\Scripts\WakeOnLANFromCSV"
+$myPSScriptRoot = $PSScriptRoot
 
 #Define the path to the log file
 [string]$LogFilePath = "$($myPSScriptRoot)\logs\WakeOnLANFromCSV_$($currentYear)-$($currentMonth)-$($currentDay)T$($currentHour)$($currentMinute)$($currentSecond)_$($env:computername).txt"
