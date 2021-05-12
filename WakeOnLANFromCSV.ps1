@@ -10,7 +10,7 @@
 
 .NOTES
     Release Date: 2021-04-30T11:48
-    Last Updated: 2021-05-12T12:14
+    Last Updated: 2021-05-12T12:19
    
     Author: Luke Nichols
     Github link: https://github.com/jlukenichols/WakeOnLANFromCSV
